@@ -17,10 +17,14 @@
         class LikeButton extends React.Component{
             constructor(props){
                 super(props);
+                this.state = {     // state : 바뀌거나 바뀔수 있는 것(상태 == state)
+                    liked: false,
+                }
             }
 
             render(){
-                return e('button', null, 'Like');  // <button>Like</button>
+                return e('button', { onClick: () => { this.state.liked !== true ? this.setState({ liked: true }) : this.setState({ liked: false }) }, type: 'button' }, this.state.liked === true ? 'Liked' : 'Like');  
+                // <button onClick="() => { this.state.liked !== true ? this.setState({ liked: true }) : this.setState({ liked: false }) }" type="button">Like or Liked</button>
             }
         }
     </script>
