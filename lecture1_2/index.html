@@ -6,13 +6,13 @@
     <title>Document</title>
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 </head>
 <body>
     <body id="root">
         
     </body>
-    <script>
-        const e = React.createElement;
+    <script type="text/babel">
 
         class LikeButton extends React.Component{
             constructor(props){
@@ -23,16 +23,17 @@
             }
 
             render(){
-                return e('button', { onClick: () => { this.state.liked !== true ? this.setState({ liked: true }) : this.setState({ liked: false }) }, type: 'button' }, this.state.liked === true ? 'Liked' : 'Like');  
+                return <button type="button" onClick={ () => this.state.liked !== true ? this.setState({ liked: true }) : this.setState({ liked: false }) }>{this.state.liked === true ? 'Liked' : 'Like'}</button>;
+                    // JSX ( JS + XML )
+                 
+                
+                // e('button', { onClick: () => { this.state.liked !== true ? this.setState({ liked: true }) : this.setState({ liked: false }) }, type: 'button' }, this.state.liked === true ? 'Liked' : 'Like');  
                 // <button onClick="() => { this.state.liked !== true ? this.setState({ liked: true }) : this.setState({ liked: false }) }" type="button">Like or Liked</button>
             }
         }
     </script>
-    <script>
-        ReactDOM.render(
-            e(LikeButton),
-            document.querySelector('#root')
-        );
+    <script type="text/babel">
+        ReactDOM.render(<div><LikeButton /><LikeButton /><LikeButton /><LikeButton /></div>, document.querySelector('#root'));
     </script>
 </body>
 </html>
