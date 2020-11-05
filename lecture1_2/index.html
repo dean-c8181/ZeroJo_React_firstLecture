@@ -49,21 +49,21 @@
             
             render() {
                 return(
-                    <div>
+                    <React.Fragment>
                         <div>{`${this.state.first} 곱하기 ${this.state.second}는?`}</div>
                         <form onSubmit={this.onSubmit}>
                             <input type="number" value={this.state.value} onChange={this.onChange} />
                             <button>입력</button>
                         </form>
                         <div>{this.state.result}</div>
-                    </div>
+                    </React.Fragment>
                 );
             }
         }
     </script>
     <script type="text/babel">
         ReactDOM.render(
-            <div><GuGuDan /><GuGuDan /><GuGuDan /></div> , document.querySelector('#root')
+            <React.Fragment><GuGuDan /><GuGuDan /><GuGuDan /></React.Fragment> , document.querySelector('#root')
         );
     </script>
 </body>
