@@ -27,7 +27,7 @@
                 };
             }
 
-            onSubmit = (e) => {
+            onSubmit = (e) => { // render밖으로 뺀 함수는 function이 들어가면 안된다 이유는 - this가 바뀌기 때문에)
                             e.preventDefault();
 
                             if(parseInt(this.state.value) === this.state.first * this.state.second){
