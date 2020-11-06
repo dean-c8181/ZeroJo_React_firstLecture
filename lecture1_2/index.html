@@ -99,6 +99,7 @@
                 
                 if(parseInt(value) === first * second){
                     setResult(`정답! ${value}`);        // preValue를 쓰고 싶으면 이렇게 쓴다 /// setValue((prevValue) => { setResult(`정답 ${prevValue}`) }) ;
+                    //setCounter((c) => c + 1 );
                     setFirst(Math.ceil(Math.random() * 9));
                     setSecond(Math.ceil(Math.random() * 9));
                     setValue('');
@@ -118,7 +119,7 @@
                     <div>{first}곱하기 {second}는?</div>
                     <form onSubmit={onSubmitForm}>
                         <input ref={inputRef} type="number" onChange={onChangeInput} value={value} />
-                        <button>입력!</button>
+                        <button className="notClass" htmlFor="notjustfor">입력!</button>
                     </form>
                     <div id="result">{result}</div>
                 </React.Fragment>
