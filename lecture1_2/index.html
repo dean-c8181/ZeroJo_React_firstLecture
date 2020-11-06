@@ -17,6 +17,7 @@
     </body>
     <!-- <script type="text/babel">
         // React Class 사용 = 지금은 권장되지 않지만 이미 많은 사이트가 클래스 컴포넌트로 구성되어 있음
+        // 변경사항이 있을때 render만 재실행된다.
 
         class GuGuDan extends React.Component {
             constructor(props){
@@ -97,7 +98,7 @@
                 e.preventDefault();
                 
                 if(parseInt(value) === first * second){
-                    setResult(`정답! ${value}`);
+                    setResult(`정답! ${value}`);        // preValue를 쓰고 싶으면 이렇게 쓴다 /// setValue((prevValue) => { setResult(`정답 ${prevValue}`) }) ;
                     setFirst(Math.ceil(Math.random() * 9));
                     setSecond(Math.ceil(Math.random() * 9));
                     setValue('');
