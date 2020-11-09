@@ -1,4 +1,5 @@
 const path = require('path');
+const RefeshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');    // 자동저장 리프레쉬 -- hot reloading은 기존 데이터 유지하해서 새로고침됨.
 
 module.exports = {
     name: 'wordrelay-setting', // 웹펙 설정의 이름 - 임의설정
@@ -17,16 +18,37 @@ module.exports = {
             test: /\.jsx?/,     // js와 jsx 파일에 룰을 적용하겠다.
             loader: 'babel-loader',     // 바벨 로더 사용
             options: {
-                presets: ['@babel/preset-env', '@babel/preset-react'],
-                plugins: ['@babel/plugin-proposal-class-properties',]
+                presets: [      // 프리셋은 플러그인 모음집같은것
+                    ['@babel/preset-env', {     // env는 구버전 브라우저 지원
+                        targets: {
+                            browsers: ['> 5% in KR', 'last 2 chrome versions', 'ie <= 8'],
+                        },
+                        debug: true,    // 개발옵션
+                    }],
+                    // 프리셋설정은 해당 프리셋을 배열로 만든 후, 객체 안에 옵션들을 넣어준다
+                    '@babel/preset-react'],
+                plugins: [
+                    '@babel/plugin-proposal-class-properties',
+                    'react-refresh/babel'   // 자동저장 리프레쉬 -- hot reloading
+                ],
             }      // 바벨의 옵션들
         }]
     },
 
+    plugins: [
+        new RefeshWebpackPlugin()   //자동저장 리프레쉬 -- hot reloading
+    ],
+
     output: {
-        path: path.join(__dirname, 'dist'),     // __dirname : 현재폴더 -- 의미는 현재폴더 안에 있는 dist 선택(원래는 D:|dean|.. 해서 가야함)
-        filename: 'app.js'
+        path: path.join(__dirname, 'dist'),     // __dirname : 현재폴더 -- 의미는 현재폴더 안에 있는 dist 선택(원래는 D:|dean|.. 해서 가야함) -- path는 실제경로
+        filename: 'app.js',
+        publicPath: '/dist/',       //  가상의 경로 express.static 과 비슷
     },      // 출력
+
+    devServer: {    // 개발용 서버 설정 -- for hot reloading
+        publicPath: '/dist/',
+        hot: true,
+    }
 };
 
 
