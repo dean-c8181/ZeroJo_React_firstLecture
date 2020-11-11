@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent, createRef } from 'react';       // createRef : class 에서도 FC처럼 ref사용하기
 import Try from './Try_class.jsx';
 
 function getNumbers() {     // 숫자 네 개를 겹치지 않고 랜덤하게 뽑는 함수
@@ -12,7 +12,7 @@ function getNumbers() {     // 숫자 네 개를 겹치지 않고 랜덤하게 �
     return array;
 }
 
-class NumberBaseball extends Component{
+class NumberBaseball extends PureComponent{
     state = {
             result: '',
             value: '',
@@ -38,6 +38,7 @@ class NumberBaseball extends Component{
                     answer: getNumbers(),
                     tries: [],
                 });
+                this.onInput.current.focus();
             }else{
                 const answerArray = value.split('').map((v) => parseInt(v));     // split(s)의 s를 빈문자열로 지정하면 문자열을 글자단위로 분리. ex.(s,p,l,i,t) 여기선 answer의 배열 값들이 number이기 때문에 input으로 들어온 문자열을 배열화 하고 그 배열의 인자들을 parseInt로 number 속성으로 바꿔주는 작업.
                 let strike = 0;
@@ -54,6 +55,7 @@ class NumberBaseball extends Component{
                         answer: getNumbers(),
                         tries: [],
                     });
+                    this.onInput.current.focus();       // createRef 사용시 FC처럼 current 추가해준다.
                 }else{      // 10번 이하로 틀렸을경우
                     for(let i = 0; i < 4; i+= 1){
                         if(answerArray[i] === answer[i]) {
@@ -85,6 +87,12 @@ class NumberBaseball extends Component{
         
     };
 
+    onInput = createRef();      // createRef 사용.
+
+    // onInputRef = (c) => {        // createRef 사용시 필요없음 but ref에 다른동작을 넣을때는 더 유용함.
+    //     this.onInput = c;
+    // }
+
     // function maxLengthCheck(object){                 //      input type number는 maxLength가 안먹어서 스크립트로 maxLength 값만큼 잘라주는 함수.
     //     if (object.value.length > object.maxLength){
     //         object.value = object.value.slice(0, object.maxLength);
@@ -100,7 +108,8 @@ class NumberBaseball extends Component{
             <>
                 <h1>{result}</h1> {/* 이게 주석 */}
                 <form onSubmit={this.onSubmitForm}>
-                    <input type="number" onChange={this.onChangeInput} value={value} maxLength={4} />
+                    <input ref={this.onInput} type="number" onChange={this.onChangeInput} value={value} maxLength={4} />
+                    {/* ref선언 바뀜 */}
                 </form>
                 <div>시도: {tries.length}</div>
                 <ul>

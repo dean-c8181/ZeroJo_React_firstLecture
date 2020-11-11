@@ -1,6 +1,6 @@
 // Hooks로 변환
 
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useRef } from 'react';
 import Try from './Try.jsx';
 
 function getNumbers() {     // 숫자 네 개를 겹치지 않고 랜덤하게 뽑는 함수 && 클래스안에 없어서 Hooks로 변할때 영향을 받지 않는다.
@@ -19,6 +19,7 @@ const NumberBaseball = memo(() => {     // 자식들(자식컴포넌트 Try같�
     const [ value, setValue ] = useState('');
     const [ answer, setAnswer] = useState(getNumbers());
     const [ tries, setTries ] = useState([]);
+    const InputEl = useRef(null);
 
     const onSubmitForm = (e) => {
         e.preventDefault();
@@ -31,6 +32,7 @@ const NumberBaseball = memo(() => {     // 자식들(자식컴포넌트 Try같�
                 setValue('');
                 setAnswer(getNumbers());
                 setTries([]);
+                InputEl.current.focus()
             }else{
                 const answerArray = value.split('').map((v) => parseInt(v));     // split(s)의 s를 빈문자열로 지정하면 문자열을 글자단위로 분리. ex.(s,p,l,i,t) 여기선 answer의 배열 값들이 number이기 때문에 input으로 들어온 문자열을 배열화 하고 그 배열의 인자들을 parseInt로 number 속성으로 바꿔주는 작업.
                 let strike = 0;
@@ -43,6 +45,7 @@ const NumberBaseball = memo(() => {     // 자식들(자식컴포넌트 Try같�
                     setValue('');
                     setAnswer(getNumbers());
                     setTries([]);
+                    InputEl.current.focus()
                 }else{      // 10번 이하로 틀렸을경우
                     for(let i = 0; i < 4; i+= 1){
                         if(answerArray[i] === answer[i]) {
@@ -67,7 +70,7 @@ const NumberBaseball = memo(() => {     // 자식들(자식컴포넌트 Try같�
         <>
             <h1>{result}</h1> {/* 이게 주석 */}
             <form onSubmit={onSubmitForm}>
-                <input type="number" onChange={onChangeInput} value={value} maxLength={4} />
+                <input ref={InputEl} type="number" onChange={onChangeInput} value={value} maxLength={4} />
             </form>
             <div>시도: {tries.length}</div>
             <ul>
