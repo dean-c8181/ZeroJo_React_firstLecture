@@ -1,6 +1,6 @@
 // Hooks로 변환
 
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Try from './Try.jsx';
 
 function getNumbers() {     // 숫자 네 개를 겹치지 않고 랜덤하게 뽑는 함수 && 클래스안에 없어서 Hooks로 변할때 영향을 받지 않는다.
@@ -14,7 +14,7 @@ function getNumbers() {     // 숫자 네 개를 겹치지 않고 랜덤하게 �
     return array;
 }
 
-const NumberBaseball = () => {
+const NumberBaseball = memo(() => {     // 자식들(자식컴포넌트 Try같은)이 모두 memo 또는 PureComp일 경우 부모에도 적용시킬 수 있다.
     const [ result, setResult ] = useState('');
     const [ value, setValue ] = useState('');
     const [ answer, setAnswer] = useState(getNumbers());
@@ -79,7 +79,7 @@ const NumberBaseball = () => {
             </ul>
         </>
     );
-}
+});
 
 // class NumberBaseball extends Component{
 //     state = {

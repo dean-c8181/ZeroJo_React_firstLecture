@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';       // 기존 li가 렌더링 되지 않음
 
-class Try extends Component{
+class Try extends PureComponent{
 
     render() {
+        const { tryInfo } = this.props;
         return(
             <>
                 <li>
-                    <div>{this.props.tryInfo.try}</div>
-                    <div>{this.props.tryInfo.result}</div>
+                    <div>{tryInfo.try}</div>
+                    <div>{tryInfo.result}</div>
                 </li>
             </>
         )

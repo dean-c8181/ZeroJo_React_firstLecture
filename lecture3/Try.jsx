@@ -1,8 +1,8 @@
 // Hooks로 변환
 
-import React from 'react';
+import React, { memo } from 'react';         // memo(memoization?) : PureComponent과 비슷한 기능을 해줌.
 
-const Try = ({ tryInfo }) => {
+const Try = memo(({ tryInfo }) => {     // 컴포넌트를 memo()로 감싸주기
     return(
         <>
             <li>
@@ -11,7 +11,7 @@ const Try = ({ tryInfo }) => {
             </li>
         </>
     );
-}
+});
 // class Try extends Component{
 
 //     render() {
