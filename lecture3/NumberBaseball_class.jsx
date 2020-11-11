@@ -26,6 +26,7 @@ class NumberBaseball extends PureComponent{
         if(value.length == 4){       // 입력한 숫자가 4자리인가? - MaxLength 기능 추가로 사실상 필요없는 조건
             if(value === answer.join('')){        // input으로 들어오는 값은 모두 문자열, join을 거친건 모두 문자열 / join안에 있는 값으로 데이터들을 구분함 ''은 아무런 구분없이 리턴
                 this.setState((prevState) => {      // setState를 여러번 사용할때 과거의 state값을 쓰는경우 prevState를 이용하는게 좋다.
+                    // 다른동작 추가 가능
                     return {
                         result: '홈런~!',
                         tries: [...prevState.tries, { try: value, result: '홈런~!'}],    // react는 push를 사용하면 바뀐것을 인지를 못하기 때문에 배열에 push를 사용하지않고 새로운 배열을 만들어서 예전 배열을 풀어 넣어준 후 바뀌는 것을 처리한다.
@@ -102,7 +103,7 @@ class NumberBaseball extends PureComponent{
     
     // 출처: https://cofs.tistory.com/215 [CofS]
 
-    render(){
+    render(){       // render안에서 setState 사용시 랜더가 무한반복됨 (setState가 랜더를 발생시킴)
         const { value, tries, result } = this.state;
         return(
             <>
