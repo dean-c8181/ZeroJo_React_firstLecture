@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,OAAO;EACH,KAAK,EAAC,KAAK;EACX,MAAM,EAAC,KAAK;EACZ,UAAU,EAAC,MAAM;EACjB,WAAW,EAAC,IAAI;;AAChB,eAAS;EACL,gBAAgB,EAAC,IAAI;;AAEzB,aAAO;EACH,gBAAgB,EAAE,GAAG;EACrB,KAAK,EAAC,IAAI;;AAEd,WAAK;EACD,gBAAgB,EAAC,WAAW",
+"sources": ["../scss/_common.scss"],
+"names": [],
+"file": "commonTotal.css"
+}

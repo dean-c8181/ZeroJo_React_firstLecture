@@ -1,9 +1,8 @@
 const path = require('path');
 const RefeshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-// process.env.NODE_ENV = 'production'; // 실 서비스
 
 module.exports = {
-    name: 'numberbaseball',
+    name: 'responsecheck',
     mode: 'development',    // 실 서비스 : production
     devtool: 'eval',     // hidden-source-map (for production)
     resolve: {
@@ -28,10 +27,10 @@ module.exports = {
                     }],
                     // 프리셋설정은 해당 프리셋을 배열로 만든 후, 객체 안에 옵션들을 넣어준다
                     '@babel/preset-react'],
-                    plugins: [
-                        '@babel/plugin-proposal-class-properties',
-                        'react-refresh/babel'   // 자동저장 리프레쉬 -- hot reloading
-                    ],
+                plugins: [
+                    '@babel/plugin-proposal-class-properties',
+                    'react-refresh/babel'   // 자동저장 리프레쉬 -- hot reloading
+                ],
             },
         }]
     },
