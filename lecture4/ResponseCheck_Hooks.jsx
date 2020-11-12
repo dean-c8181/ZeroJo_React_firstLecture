@@ -51,7 +51,30 @@ const ResponseCheck = () => {
             </>
         )
     };
+    
+    // return안에서 if, for문을 쓰고 싶으면 즉시실행 함수안에 넣어서 써야함. (굳이 그럴필요가 없어서 다 함수로 빼서 사용.)
+    /*  ex.
+    {(() => {
+        if(true){
+            return '트루히요'
+        }else{
+            return '포스'
+        }
 
+        const array = [];
+        for(let i = 0; i < tries.length; i++){
+            array.push(<Try key={`${index + 1}차 시도`} tryInfo={y} i={index}/>);
+        }
+        retrun array;
+
+        {tries.map((y, index) => {
+            return(
+                <Try key={`${index + 1}차 시도`} tryInfo={y} i={index}/>
+            );
+        })}
+    })()}
+    
+    */
     return(
         <>
             <div
