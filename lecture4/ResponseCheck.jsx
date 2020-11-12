@@ -25,7 +25,7 @@ class ResponseCheck extends PureComponent{
                     state: 'now',
                     message: '지금 클릭!'
                 });
-                this.startTime = new Date();     // 초록색이 된 순간부터 반응속도 체크
+                this.startTime = new Date();     // 초록색이 된 순간부터 반응속도 체크 new Date(), Date.now() 둘다 실행될때의 시간을 기록하지만 성능은 Date.now() 더 빠르다.
             }, parseInt(randomTimer));
             //console.log(parseInt(randomTimer));
         }else if(state === 'ready'){        // 성급하게 클릭
@@ -35,7 +35,7 @@ class ResponseCheck extends PureComponent{
                 message: '너무 성급하시군요. 초록색이 된 후에 클릭하세요.',
             });
         }else if(state ==='now'){       // 반응속도 체크
-            this.endTime = new Date();
+            this.endTime = Date.now();
             this.setState((prevState) => {
                 return {
                     state: 'waiting',
@@ -46,12 +46,19 @@ class ResponseCheck extends PureComponent{
         }
     };
 
+    onReset = () => {
+        this.setState({
+            result: []
+        })
+    }
+
     renderAverage = () => {
         const { result }  = this.state
         return(
         result.length === 0 ? null : 
             <>
                 <div>평균시간 {result.reduce((a, c) => a + c) / result.length}ms</div>
+                <button onClick={this.onReset}>초기화</button>
                 {result.map((rst, i) => <div key={i + 'chasi'}>{`${i+1}차시 : ${rst}ms`}</div>)}
             </>
             
