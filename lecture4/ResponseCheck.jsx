@@ -52,7 +52,7 @@ class ResponseCheck extends PureComponent{
         result.length === 0 ? null : 
             <>
                 <div>평균시간 {result.reduce((a, c) => a + c) / result.length}ms</div>
-                {result.map((rst, i) => <div>{`${i+1}차시 : ${rst}ms`}</div>)}
+                {result.map((rst, i) => <div key={i + 'chasi'}>{`${i+1}차시 : ${rst}ms`}</div>)}
             </>
             
             // reduce 메서드 : 배열의 하나하나를 이전값(초기값)과 현재 배열요소를 받아 처리함. reduce와 reduceRight는 배열을 기반으로 값 하나를 도출할 때 사용됩니다.
