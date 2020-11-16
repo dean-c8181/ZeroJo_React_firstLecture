@@ -26,7 +26,8 @@ class Lotto extends Component{
 
     timeouts = [];
 
-    componentDidMount() {
+    runTimeOut = () => {
+        console.log('rundTimeOut');
         const { winNumbers } = this.state
         for(let i = 0; i < winNumbers.length - 1; i++){
             this.timeouts[i] = setTimeout(() => {
@@ -46,11 +47,35 @@ class Lotto extends Component{
         }, 7000)
     }
 
+    componentDidMount() {
+        console.log('DidMount');
+        this.runTimeOut();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('DidUpdate');
+        if(this.state.winBalls.length === 0){      // onClickRedo 실행시에만 작동하게 (didUpdate는 매번 실행되지만 조건문에 걸려 redo때만 runtimeout 실행)
+            this.runTimeOut();
+        }
+    };
+
     componentWillUnmount() {        
         this.timeouts.forEach((v) => {
             clearTimeout(v);
         });
     }       // 비동기 처리는 항상 제거해주는 이벤트가 있어야함.
+
+    onClickRedo = () => {
+        console.log('onCllickRedo');
+        this.setState({
+            winNumbers: getWinNumbers(),
+            winBalls: [],
+            bonus: null,
+            redo: false,
+        });
+        this.timeouts = [];
+        // CDM의 코드들을 복붙해서 가져와도 되지만 CDU에 실행하게 함.
+    };
 
     
 
