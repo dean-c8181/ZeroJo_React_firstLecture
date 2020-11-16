@@ -54,6 +54,7 @@ const RSP = () => {
         }
     }, [imgCoord,]);     // []배열이 class의 클로저문제 해결과 같은 역할 - useEffect를 실행하고 싶은 state 넣기
     // [] 안에 state가 바뀔때마다 useEffect가 계속 실행됨. []에 아무것도 넣지않으면 뭐가 바뀌어도 한번만 실행 함.
+    // state별로 다른 이펙트를 내고 싶으면 useEffect 를 여러번 써서 사용!
 
     const changeHand = () => {
         if(imgCoord === rspCoords.가위){
