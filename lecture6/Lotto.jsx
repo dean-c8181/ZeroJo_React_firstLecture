@@ -1,5 +1,11 @@
-import React, { useState, useRef, useEffect, } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback} from 'react';
 import Ball from './Ball';
+
+// useMemo 는 함수의 결괏값을 기억한다. 
+// useCallback 은 함수 자체를 기억한다.
+// useCallback 은 FC가 다시 실행될때 UCB의 함수는 매번 다시 만들지 않는다.
+// useCallback 안에서 state를 쓸 경우 새로운 값으로 바뀌지 않을 수 있다. 주의! 
+// 따라서 inputs에 state를 넣어 주어서 해당 state변경시 함수가 다시 호출 되게 해야한다.
 
 function getWinNumbers (){      // 반복 실행 되면 안됨. -- state 안쓰는 함수는 꼭 분리하기
     console.log('getWinNumbers');
@@ -16,12 +22,20 @@ function getWinNumbers (){      // 반복 실행 되면 안됨. -- state 안쓰�
     return [... winNumbers, bonusNumber];
 }
 
+// 함수컴포넌트 전체가 재실행됨. getWinNumbers가 공이 뽑힐때마다 실행됨 따라서 winNumber를 캐싱(기억)을 시킨다 (useMemo) 사용
+
 const Lotto = () => {
-    const [ winNumbers, setWinNumber ] = useState(getWinNumbers());
     const [ winBalls, setWinBalls ] = useState([]);
+    const lottoNumbers = useMemo(() => getWinNumbers(), []);
+    // useMemo는 useEffect와 비슷하게 inputs([])에 조건을 넣고 해당인자가 변화하면 해당 함수를 호출시킨다.
+    // 함수 실행값 저장
+    const [ winNumbers, setWinNumber ] = useState(lottoNumbers);    
     const [ bonus, setBonus ] = useState(null);
     const [ redo, setRedo ] = useState(false);
     const timeouts = useRef([]);
+
+    // useMemo : 복잡한 함수 결괏값을 기억
+    // useRef : 일반 값을 기억
 
     useEffect(() => {
         console.log('runTimeOut');
@@ -45,15 +59,16 @@ const Lotto = () => {
     // [](inputs)이 비어있으면 componentDidMount와 같은 역활을 한다.
     // [](inputs)에 state가 있으면 componentDidMount와 componentDidUpdate의 역활을 둘다 수행
 
-    const onClickRedo = () => {
+    const onClickRedo = useCallback(() => {     // useCallback은 자식 props로 함수를 넘겨줄때는 항상 사용해야한다! - 계속 새로운 props를 제공하는 것으로 인식.
         console.log('onCllickRedo');
+        console.log(winNumbers);    // 새로운 값으로 없뎃이 안됨.
         setWinNumber(getWinNumbers());
         setWinBalls([]);
         setBonus(null);
         setRedo(false);
         timeouts.current = [];      //currunet를 직접 바꾼거라 바꾼거임.
         // CDM의 코드들을 복붙해서 가져와도 되지만 CDU에 실행하게 함.
-    };
+    }, [winNumbers]); // inputs에 넣어줘야 업데이트됨.(inputs가 바뀌면 업뎃)
 
     return(
         <>
