@@ -39,6 +39,18 @@ const Lotto = () => {
     // useMemo : 복잡한 함수 결괏값을 기억
     // useRef : 일반 값을 기억
 
+    // useEffect를 CDU에서만 작동하게 하는방법(CDM 때는 작동안함) - 패턴임
+    const mounted = useRef(false);
+    useEffect(() => {
+        if(!mounted.current){
+            mounted.current = true;     // didMount 영역 아무것도 실행안함.
+        }else{
+            // ajax
+        }
+
+    }, [바뀌는값]);     // componentDidUpdate O , componentDidMount X
+
+
     useEffect(() => {
         console.log('runTimeOut');
         for(let i = 0; i < winNumbers.length - 1; i++){
