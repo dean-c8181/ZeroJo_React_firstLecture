@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback} from 'react';
 import Ball from './Ball';
+// Hooks는 선언되는 위치가 매우 중요하다. 조건문 절대금지, 최상위에 위치, useState 사용금지. - 반복문은 가능하지만 추천되진 않는다.
 
-// useMemo 는 함수의 결괏값을 기억한다. 
+// useMemo 는 함수의 결괏값을 기억한다.    
 // useCallback 은 함수 자체를 기억한다.
 // useCallback 은 FC가 다시 실행될때 UCB의 함수는 매번 다시 만들지 않는다.
 // useCallback 안에서 state를 쓸 경우 새로운 값으로 바뀌지 않을 수 있다. 주의! 
 // 따라서 inputs에 state를 넣어 주어서 해당 state변경시 함수가 다시 호출 되게 해야한다.
+// 둘다 inputs[] 가 바뀔때까지 기억한다!
 
 function getWinNumbers (){      // 반복 실행 되면 안됨. -- state 안쓰는 함수는 꼭 분리하기
     console.log('getWinNumbers');
@@ -58,6 +60,7 @@ const Lotto = () => {
     }, [timeouts.current])      
     // [](inputs)이 비어있으면 componentDidMount와 같은 역활을 한다.
     // [](inputs)에 state가 있으면 componentDidMount와 componentDidUpdate의 역활을 둘다 수행
+    // inputs가 바뀔대 실행된다.!
 
     const onClickRedo = useCallback(() => {     // useCallback은 자식 props로 함수를 넘겨줄때는 항상 사용해야한다! - 계속 새로운 props를 제공하는 것으로 인식.
         console.log('onCllickRedo');
