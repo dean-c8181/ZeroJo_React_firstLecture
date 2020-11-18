@@ -25,9 +25,11 @@ const reducer = (state, action) => {        // reducer안에서 state를 어떻�
             const tableData = [...state.tableData];     // 기존의 tableDada 불러오기
             tableData[action.row] = [...tableData[action.row]];     // tableData의 선택된 행 가져오기(기존값이 있으면 기존값 그대로)
             tableData[action.row][action.cell] = state.turn;    // 위에서 선택된 행에서 열 가져와서 turn의 값을 넣어준다.
+            console.log({...state, tableData});
+            console.log(initialState);
             return{
                 ...state,
-                tableData,      // 기존스테이트에서 tableData 업뎃
+                tableData,      // 기존스테이트에서 tableDate 를 업데이트해서 값 반환
             };
         }
         case CHANGE_TURN: {
