@@ -1,7 +1,7 @@
 import React from 'react';
 import Tr from './Tr';
 
-const Table = ({ onClick, tableData, dispatch }) => {
+const Table = ({ tableData, dispatch }) => {
     return (
         <table>
             <tbody>

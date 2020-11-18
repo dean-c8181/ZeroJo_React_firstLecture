@@ -26,7 +26,7 @@ const reducer = (state, action) => {        // reducer안에서 state를 어떻�
             };
         case CLICK_CELL: {  // React는 불변성 보존이 원칙임. immer라는 라이브러리로 가독성 해결 가능.
             const tableData = [...state.tableData];     // 기존의 tableDada 불러오기
-            tableData[action.row] = [...tableData[action.row]];     // tableData의 선택된 행 가져오기(기존값이 있으면 기존값 그대로)
+            tableData[action.row] = [...tableData[action.row]];     // tableData의 선택된 행 가져오기(기존값이 있으면 기존값 그대로) - 불변셩을 지키기위해서 해로 배열을 만들어서 넣어준다. 불변성을 지키지 않으면(새로 배열을 넣는게 아니라 tableData[action.row] 이렇게만 사용하면 리액트가 변화를 알지 못하고 reRedering이 되지 않는다.)
             tableData[action.row][action.cell] = state.turn;    // 위에서 선택된 행에서 열 가져와서 turn의 값을 넣어준다.
             //console.log({...state, tableData}); -- 바뀐값이 나옴
             //console.log(initialState);    -- 기존 스테이트는 그대로나옴
