@@ -21,13 +21,13 @@ const reducer = (state, action) => {        // reducer안에서 state를 어떻�
                 ...state,   // 얕은 복사. - 기존의 state 가저오기.
                 winner: action.winner, 
             };
-        case CLICK_CELL: {
-            const tableData = [...state.tableData];     // 불변성을 지켜야해서 복잡해짐.
-            tableData[action.row] = [...tableData[action.row]];     // immer라는 라이브러리로 가독성 해결함
-            tableData[action.row][action.cell] = state.turn;
+        case CLICK_CELL: {  // React는 불변성 보존이 원칙임. immer라는 라이브러리로 가독성 해결 가능.
+            const tableData = [...state.tableData];     // 기존의 tableDada 불러오기
+            tableData[action.row] = [...tableData[action.row]];     // tableData의 선택된 행 가져오기(기존값이 있으면 기존값 그대로)
+            tableData[action.row][action.cell] = state.turn;    // 위에서 선택된 행에서 열 가져와서 turn의 값을 넣어준다.
             return{
                 ...state,
-                tableData,
+                tableData,      // 기존스테이트에서 tableData 업뎃
             };
         }
         case CHANGE_TURN: {
@@ -38,6 +38,8 @@ const reducer = (state, action) => {        // reducer안에서 state를 어떻�
         }
     }
 }
+
+/// state변경이 한꺼번에 일어 나서 적용 되는것같음.
 
 const Tictactoe = () => {
     const [ state, dispatch ] = useReducer(reducer, initialState); //    lazyInitialize 지연초기화 거의 안쓴다함. - 초기값 고정.
