@@ -35,7 +35,7 @@ export const START_GAME  ="START_GAME"
 
 const reducer = (state, action) => {
     switch(action.type){
-        case SATART_GAME:
+        case START_GAME:
             return{
                 ...state,
                 tableData: PlantMine(action.row, action.cell, action.mine),
