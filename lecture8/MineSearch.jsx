@@ -38,7 +38,7 @@ const reducer = (state, action) => {
         case SATART_GAME:
             return{
                 ...state,
-                tableData: PlantMine(action.row, action.cell, action.mine);
+                tableData: PlantMine(action.row, action.cell, action.mine),
             };
         default:
             return state;
