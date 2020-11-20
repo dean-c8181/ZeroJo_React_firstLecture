@@ -31,6 +31,40 @@ const initialState = {
     result: '',
 }
 
+const PlantMine = (row, cell, mine) => {       // form에서 설정한대로 지뢰를 심는 함수
+    console.log(row, cell, mine);
+    const candidate = Array(row * cell).fill().map((arr, i) => {
+        return i;
+    });
+    console.log(candidate);
+
+    const shuffle = [];
+    while(candidate.length > row * cell - mine){        // 몇번째 칸에 넣을지 shuffle 안에 저장.
+        const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0];
+        console.log(candidate.length);
+        shuffle.push(chosen);
+    }
+    console.log(shuffle);
+
+    const data = [];
+    for (let i = 0; i < row; i++){      // 2차원 배열 만들기
+        const rowData = [];
+        data.push(rowData);
+        for(let j = 0; j < cell; j++){
+            rowData.push(CODE.NORMAL);
+        }
+    }
+
+    for(let k = 0; k < shuffle.length; k++){
+        const ver = Math.floor(shuffle[k] / cell);      // row 숫자 0~9까지 (셔플의 숫자를 셀갯수로 나눈 후 10의자리만 리턴.)
+        const hor = shuffle[k] % cell;                     // cell 숫자 0~9까지 (셔플의 숫자를 셀갯수로 나눈 후 나머지 리턴)
+        data[ver][hor] = CODE.MINE;
+    }
+    
+    console.log(data);
+    return data;
+}
+
 export const START_GAME  ="START_GAME"
 
 const reducer = (state, action) => {
