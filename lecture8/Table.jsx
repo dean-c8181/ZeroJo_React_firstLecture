@@ -1,9 +1,14 @@
 import React from 'react';
+import Tr from './Tr';
 
 const Table = () => {
     return (
         <>
-            '테이블'
+            <table>
+                <tbody>
+                    <Tr></Tr>
+                </tbody>
+            </table>
         </>
     );
 }

@@ -1,9 +1,12 @@
 import React from 'react';
+import Td from './Td';
 
 const Tr = () => {
     return (
         <>
-            '티알'
+            <tr>
+                <Td></Td>
+            </tr>
         </>
     );
 }
