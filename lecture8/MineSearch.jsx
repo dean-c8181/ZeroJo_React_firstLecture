@@ -22,6 +22,7 @@ export const TableContext = createContext({        // 초기값 (데이터형태
         [],
     ],
     dispatch: () => {},
+    halted: true,
 });
 
 
@@ -29,19 +30,21 @@ const initialState = {
     tableData: [],
     timer: 0,
     result: '',
+    halted: true,
 }
 
 const PlantMine = (row, cell, mine) => {       // form에서 설정한대로 지뢰를 심는 함수
-    console.log(row, cell, mine);
+    //console.log(row, cell, mine);
     const candidate = Array(row * cell).fill().map((arr, i) => {
         return i;
     });
-    console.log(candidate);
+    //console.log(candidate);
 
     const shuffle = [];
     while(candidate.length > row * cell - mine){        // 몇번째 칸에 넣을지 shuffle 안에 저장.
-        const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0];
         console.log(candidate.length);
+        const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0];
+        //console.log(candidate.length);
         shuffle.push(chosen);
     }
     console.log(shuffle);
@@ -50,8 +53,10 @@ const PlantMine = (row, cell, mine) => {       // form에서 설정한대로 지
     for (let i = 0; i < row; i++){      // 2차원 배열 만들기
         const rowData = [];
         data.push(rowData);
+        //console.log(data);
         for(let j = 0; j < cell; j++){
             rowData.push(CODE.NORMAL);
+            //console.log(data);
         }
     }
 
@@ -66,14 +71,88 @@ const PlantMine = (row, cell, mine) => {       // form에서 설정한대로 지
 }
 
 export const START_GAME  ="START_GAME"
+export const OPEN_CELL  ="OPEN_CELL"
+export const CLICKED_MINE = "CLICK_MINE"
+export const FLAG_CELL = "FLAG_CELL"
+export const QUESTION_CELL = "QUESTION_CELL"
+export const NORMALIZE_CELL = "NORMALIZE_CELL"
 
 const reducer = (state, action) => {
     switch(action.type){
-        case START_GAME:
+        case START_GAME: {
             return{
                 ...state,
                 tableData: PlantMine(action.row, action.cell, action.mine),
+                halted: false,
             };
+        }
+        case OPEN_CELL: {
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            tableData[action.row][action.cell] = CODE.OPENED;
+            return{
+                ...state,
+                tableData,
+            };
+        }
+        case CLICKED_MINE:{
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            tableData[action.row][action.cell] = CODE.CLICKED_MINE;
+            return{
+                ...state,
+                tableData,
+                halted: true,
+            };
+        }
+        case FLAG_CELL:{
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            if(tableData[action.row][action.cell] === CODE.MINE){
+                tableData[action.row][action.cell] = CODE.FLAG_MINE;
+            }else{
+                tableData[action.row][action.cell] = CODE.FLAG;
+            }            
+            return{
+                ...state,
+                tableData,
+            };
+        }
+        case QUESTION_CELL:{
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            if(tableData[action.row][action.cell] === CODE.FLAG_MINE){
+                tableData[action.row][action.cell] = CODE.QUESTION_MINE;
+            }else{
+                tableData[action.row][action.cell] = CODE.QUESTION;
+            } 
+            return{
+                ...state,
+                tableData,
+            };
+        }
+        case NORMALIZE_CELL:{
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            if(tableData[action.row][action.cell] === CODE.QUESTION_MINE){
+                tableData[action.row][action.cell] = CODE.MINE;
+            }else{
+                tableData[action.row][action.cell] = CODE.NORMAL;
+            } 
+            return{
+                ...state,
+                tableData,
+            };
+        }
+        case OPEN_CELL:{
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            tableData[action.row][action.cell] = CODE.CLICKED_MINE;
+            return{
+                ...state,
+                tableData,
+            };
+        }
         default:
             return state;
         
@@ -82,18 +161,19 @@ const reducer = (state, action) => {
 
 const MineSearch = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
+    const { tableData, halted, timer, result } = state;
 
     const value = useMemo(() => ({     // conText API를 사용할때는 이와같이 useMemo로 캐싱을 해줘야 성능최적화에 문제가 없다.
-        tableData: state.tableData, dispatch
-    }), [state.tableData])      // dispatch는 항상 같게 유지된다.
+        tableData: tableData, dispatch, halted: halted
+    }), [tableData, halted])      // dispatch는 항상 같게 유지된다.
     
     // data들에 접근하고 싶은 Component를 Context.Provider 로 감싸준다. data는 Provider의 value에 넣는다.(데이터를 캐싱하지 않고 전부 넣으면 이 방법은 성능저하의 요인이됨.)
     return(
         <TableContext.Provider value={value}>
             <Form></Form>
-            <div>{state.timer}</div>
+            <div>{timer}</div>
             <Table></Table>
-            <div>{state.result}</div>
+            <div>{result}</div>
         </TableContext.Provider>
     );
 }
