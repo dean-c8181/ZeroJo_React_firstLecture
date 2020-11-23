@@ -89,7 +89,30 @@ const reducer = (state, action) => {
         case OPEN_CELL: {
             const tableData = [...state.tableData];
             tableData[action.row] = [...state.tableData[action.row]];
-            tableData[action.row][action.cell] = CODE.OPENED;
+            let around = []     // 주변지뢰 검사
+            if(tableData[action.row - 1]){      // 위에 3칸 검사(윗칸있을시)
+                around = around.concat(
+                    tableData[action.row - 1][action.cell - 1],
+                    tableData[action.row - 1][action.cell],
+                    tableData[action.row - 1][action.cell + 1]
+                )
+            }
+            around = around.concat(      // 내줄 양옆 검사
+                tableData[action.row][action.cell - 1],
+                tableData[action.row][action.cell + 1],
+            );
+            if(tableData[action.row - 1]){      // 아래 3칸 검사(윗칸있을시)
+                around = around.concat(
+                    tableData[action.row + 1][action.cell - 1],
+                    tableData[action.row + 1][action.cell],
+                    tableData[action.row + 1][action.cell + 1]
+                );
+            }
+
+            const count = around.filter((v) => [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)).length;
+            console.log(around, count)
+            tableData[action.row][action.cell] = count;
+
             return{
                 ...state,
                 tableData,

@@ -45,10 +45,8 @@ const getTdText = (code) => {
         case CODE.QUESTION:
         case CODE.QUESTION_MINE:
             return '❓';
-        case CODE.OPENED:
-            return 'open';
         default:
-            return '';
+            return code || '';
     }
 };
 
