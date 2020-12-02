@@ -1,4 +1,4 @@
-import React, { useReducer, createContext, useMemo, } from 'react';
+import React, { useReducer, createContext, useMemo, useEffect, } from 'react';
 import Table from '../lecture8/Table';
 import Form from '../lecture8/Form';
 
@@ -28,9 +28,15 @@ export const TableContext = createContext({        // 초기값 (데이터형태
 
 const initialState = {
     tableData: [],
+    data: {
+        row: 0,
+        cell: 0,
+        mine: 0,
+    },
     timer: 0,
     result: '',
     halted: true,
+    openedCount: 0,
 }
 
 const PlantMine = (row, cell, mine) => {       // form에서 설정한대로 지뢰를 심는 함수
@@ -70,20 +76,28 @@ const PlantMine = (row, cell, mine) => {       // form에서 설정한대로 지
     return data;
 }
 
-export const START_GAME  ="START_GAME"
-export const OPEN_CELL  ="OPEN_CELL"
-export const CLICKED_MINE = "CLICK_MINE"
-export const FLAG_CELL = "FLAG_CELL"
-export const QUESTION_CELL = "QUESTION_CELL"
-export const NORMALIZE_CELL = "NORMALIZE_CELL"
+export const START_GAME  ="START_GAME";
+export const OPEN_CELL  ="OPEN_CELL";
+export const CLICKED_MINE = "CLICK_MINE";
+export const FLAG_CELL = "FLAG_CELL";
+export const QUESTION_CELL = "QUESTION_CELL";
+export const NORMALIZE_CELL = "NORMALIZE_CELL";
+export const INCREMENT_TIMER = "INCREMENT_TIMER";
 
 const reducer = (state, action) => {
     switch(action.type){
         case START_GAME: {
             return{
                 ...state,
+                data: {     // 게임 시작할때 가로,세로,지뢰갯수 기록
+                    row: action.row,
+                    cell: action.cell,
+                    mine: action.mine
+                },
+                openedCount: 0,
                 tableData: PlantMine(action.row, action.cell, action.mine),
                 halted: false,
+                timer: 0,
             };
         }
         case OPEN_CELL: {
@@ -95,6 +109,7 @@ const reducer = (state, action) => {
             });
 
             const checked = [];     // 빈칸이 양옆으로 있으면 무한 checkAround가 되기 때문에 한번 검사 한 칸은 다시 검사 하지 않는 조건을 걸어줘야함.
+            let  openedCount = 0
             const checkAround = (row, cell) => {        // 나를 기준으로 주변 셀 검사. / 매개변수로 받아서 action 제거
                 if(row < 0 || row >= tableData.length || cell < 0 || cell >= tableData[0].length){       // 상하좌우 칸이 아닌경우 필터링
                     return;
@@ -149,19 +164,32 @@ const reducer = (state, action) => {
 
                         near.forEach((n) => {
                             if(tableData[n[0]][n[1]] !== CODE.OPENED){      // 이미 연 칸이 아니면
-                                checkAround(n[0], n[1]);        // 주변칸 클릭 효과
+                                checkAround(n[0], n[1]);        // 주변칸 클릭 효과 (재귀함수)
                             }
                         })
                     }
+                }
+                if(tableData[row][cell] === CODE.NORMAL){       // 내칸이 닫힌 칸일때만 카운트 세기
+                    openedCount += 1;
                 }
                 tableData[row][cell] = count
             };
 
             checkAround(action.row, action.cell);
+            let halted = false;
+            let result = '';
+            console.log(state.data.row , state.openedCount, openedCount);
+            if(state.data.row * state.data.cell - state.data.mine == state.openedCount + openedCount){       // 승리
+                halted = true;
+                result = `${state.timer}초 만에 승리 하셨습니다!!`
+            }
 
             return{
                 ...state,
                 tableData,
+                openedCount: state.openedCount + openedCount,
+                halted,
+                result,
             };
         }
         case CLICKED_MINE:{
@@ -222,6 +250,14 @@ const reducer = (state, action) => {
                 tableData,
             };
         }
+        case INCREMENT_TIMER:{
+            return{
+                ...state,
+                timer: state.timer + 1,
+
+            }
+        }
+
         default:
             return state;
         
@@ -235,6 +271,19 @@ const MineSearch = () => {
     const value = useMemo(() => ({     // conText API를 사용할때는 이와같이 useMemo로 캐싱을 해줘야 성능최적화에 문제가 없다.
         tableData: tableData, dispatch, halted: halted
     }), [tableData, halted])      // dispatch는 항상 같게 유지된다.
+
+    useEffect(() => {
+        let timer;
+        if(halted === false){
+            timer = setInterval(() => {
+                dispatch({ type: INCREMENT_TIMER })
+            }, 1000);
+        }
+        
+        return() => {
+            clearInterval(timer);
+        }
+    }, [halted]);
     
     // data들에 접근하고 싶은 Component를 Context.Provider 로 감싸준다. data는 Provider의 value에 넣는다.(데이터를 캐싱하지 않고 전부 넣으면 이 방법은 성능저하의 요인이됨.)
     return(

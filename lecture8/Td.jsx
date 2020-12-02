@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, memo, useMemo } from 'react';
 import {CODE, OPEN_CELL, TableContext, FLAG_CELL, QUESTION_CELL, NORMALIZE_CELL, CLICKED_MINE } from './MineSearch';
 
 const getTdStyle = (code) => {
@@ -32,6 +32,8 @@ const getTdStyle = (code) => {
 };
 
 const getTdText = (code) => {
+    //console.log('getTdText');        해당 td만 리랜더링됨
+
     switch(code){
         case CODE.NORMAL:
             return '';
@@ -50,7 +52,7 @@ const getTdText = (code) => {
     }
 };
 
-const Td = ({ rowIndex, cellIndex }) => {
+const Td = memo(({ rowIndex, cellIndex }) => {
     const { tableData, dispatch, halted } = useContext(TableContext);
 
     const onClickTd = useCallback(() => {
@@ -97,14 +99,36 @@ const Td = ({ rowIndex, cellIndex }) => {
                 return;
         }
     }, [tableData[rowIndex][cellIndex], halted]);
+    
+    // console.log('rd rendered'); td 하나를 클릭해도 모든 td가 리랜더링됨 > useMemo 사용하여 캐싱하기
+    // conText API를 쓰면 td라는 함수는 매번 실행된다 but retrun은 필요한 만큼만 실행된다(cuz useMemo)
+    // conText API 모두 리랜더링 시킴.(??)
 
-    return (
+    return useMemo(() => (
          <td
             style={getTdStyle(tableData[rowIndex][cellIndex])}
             onClick={onClickTd}
             onContextMenu={onRightClickTd}    // 마우스 오른쪽 클릭
          >{getTdText(tableData[rowIndex][cellIndex])}</td>
-    );
-}
+    ), [tableData[rowIndex][cellIndex]]);
+})
+
+// useMemo 대신 컴포넌트를 분리시키는 방법도 있음
+
+//     return <RealTd onClickTd={onClickTd} onRightClickTd={onRightClickTd} data={tableData[rowIndex][cellIndex] />;
+// })
+
+// const RealTd = memo(({ onClickTd, onRightClickTd, data}) =>{
+//     console.log('real td rendered');
+//     return(
+//         <td
+//             style={getTdStyle(data)}
+//             onClick={onClickTd}
+//             onContextMenu={onRightClickTd}
+//         >{getTdText(data)}    
+//         </td>
+//     )
+// })
+
  
 export default Td;
